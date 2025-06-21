@@ -1,11 +1,16 @@
 package com.example.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
+import com.example.entity.Message;
 import com.example.exception.ClientErrorException;
 import com.example.exception.DuplicateUsernameException;
 import com.example.exception.UnauthorizedException;
@@ -37,6 +42,12 @@ public class SocialMediaController {
     @PostMapping("login")
     public ResponseEntity<Account> login(@RequestBody Account account) throws UnauthorizedException{
         Account ret = accountService.login(account.getUsername(), account.getPassword());
+        return ResponseEntity.status(200).body(ret);
+    }
+
+    @GetMapping("accounts/{accountId}/messages")
+    public ResponseEntity<List<Message>> getMessagesByAccount(@PathVariable int accountId){
+        List<Message> ret = messageService.getMessagesByAccount(accountId);
         return ResponseEntity.status(200).body(ret);
     }
 }
