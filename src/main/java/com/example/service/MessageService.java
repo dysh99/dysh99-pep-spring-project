@@ -24,19 +24,11 @@ public class MessageService {
     }
 
     public Message createMessage(Message message) throws ClientErrorException{
-        if(message.getMessageText().isEmpty()){
-            System.out.println("Message is blank");
-            throw new ClientErrorException("Message is blank");
-        }
-        if(message.getMessageText().length() > 255){
-            System.out.println("Message is too long");
-            throw new ClientErrorException("Message is too long");
-        }
+        if(message.getMessageText().isEmpty()) throw new ClientErrorException("Message is blank");
+        if(message.getMessageText().length() > 255) throw new ClientErrorException("Message is too long");
+
         Optional<Account> account = accountRepository.findById(message.getPostedBy());
-        if(account.isEmpty()){
-            System.out.println("Posted by doesn't reference a real acconut");
-            throw new ClientErrorException("Posted by doesn't reference a real acconut");
-        }
+        if(account.isEmpty()) throw new ClientErrorException("Posted by doesn't reference a real acconut");
 
         return messageRepository.save(new Message(message.getPostedBy(), message.getMessageText(), message.getTimePostedEpoch()));
     }
@@ -60,8 +52,10 @@ public class MessageService {
     public void updateMessage(int messageId, String text) throws ClientErrorException{
         if(text.isEmpty()) throw new ClientErrorException("text is empty");
         if(text.length() > 255) throw new ClientErrorException("text is too long");
+
         Optional<Message> message = messageRepository.findById(messageId);
         if(message.isEmpty()) throw new ClientErrorException("message doesn't exist");
+        
         Message updatedMessage = message.get();
         updatedMessage.setMessageText(text);
     }

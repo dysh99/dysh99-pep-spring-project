@@ -3,8 +3,6 @@ package com.example.controller;
 import java.util.List;
 import java.util.Optional;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Message;
 import com.example.exception.ClientErrorException;
-import com.example.service.AccountService;
 import com.example.service.MessageService;
 
 @RestController
@@ -53,10 +50,10 @@ public class MessageController {
     @DeleteMapping("{messageId}")
     public ResponseEntity<Integer> deleteMessage(@PathVariable int messageId){
         boolean exists = messageService.deleteMessage(messageId);
-        if(!exists){
-            return ResponseEntity.status(200).body(null);
-        }else{
+        if(exists){
             return ResponseEntity.status(200).body(1);
+        }else{
+            return ResponseEntity.status(200).body(null);
         }
     }
 
